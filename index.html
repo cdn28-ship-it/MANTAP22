@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>🎬FULL ASUPANN</title>
+
+  <meta property="og:title" content="🎬FULL ASUPANN">
+  <meta property="og:description" content="Tonton video sampai selesai.">
+  <meta property="og:image" content="https://jpcdn.it/img/d5e691c354601510ecaec64f36c5cf3b.jpg">
+  <meta property="og:type" content="video.other">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px 10px;
+      background: #0b0b0b;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    /* VIDEO */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      background: #000;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(0,0,0,.7);
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #000;
+    }
+
+    /* BLUR SAAT TRIGGER */
+    .video-wrapper.locked video {
+      filter: blur(7px);
+    }
+
+    /* OVERLAY LANJUTKAN */
+    .continue-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(0,0,0,.45);
+      padding: 20px;
+    }
+
+    .continue-overlay.active {
+      display: flex;
+    }
+
+    .continue-box {
+      width: min(90%, 360px);
+      padding: 25px 20px;
+      text-align: center;
+
+      background: rgba(20,20,20,.96);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+
+      box-shadow: 0 10px 40px rgba(0,0,0,.8);
+    }
+
+    .continue-box h2 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: #fff;
+    }
+
+    .continue-box p {
+      margin: 0 0 20px;
+      color: #bbb;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .continue-btn {
+      width: 100%;
+      padding: 13px 18px;
+
+      border: 0;
+      border-radius: 8px;
+
+      background: #fff;
+      color: #000;
+
+      font-size: 16px;
+      font-weight: bold;
+
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .continue-btn:hover {
+      transform: scale(1.02);
+      opacity: .9;
+    }
+
+    /* FULLSCREEN ICON */
+    .fullscreen-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+
+      z-index: 30;
+
+      width: 40px;
+      height: 40px;
+
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+
+      background: rgba(0,0,0,.70);
+      color: #fff;
+
+      font-size: 21px;
+      line-height: 1;
+
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transition: .2s;
+    }
+
+    .fullscreen-btn:hover {
+      background: rgba(255,255,255,.18);
+    }
+
+    .video-wrapper:fullscreen .fullscreen-btn,
+    .video-wrapper:-webkit-full-screen .fullscreen-btn {
+      right: 20px;
+      bottom: 20px;
+    }
+
+    /* =========================================
+       BANNER KUMPULAN VIDEO
+    ========================================= */
+
+    .video-banner {
+      margin-top: 15px;
+      width: 100%;
+      min-height: 75px;
+
+      padding: 14px 18px;
+
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #ff0055 0%,
+          #8b00ff 45%,
+          #0066ff 100%
+        );
+
+      border-radius: 12px;
+
+      color: #fff;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 5px 20px rgba(0,0,0,.35);
+
+      transition: .25s;
+    }
+
+    .video-banner:hover {
+      transform: translateY(-2px);
+
+      box-shadow:
+        0 8px 25px rgba(0,0,0,.5);
+    }
+
+    .banner-icon {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .banner-text {
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+
+      gap: 4px;
+    }
+
+    .banner-text strong {
+      font-size: 16px;
+    }
+
+    .banner-text span {
+      font-size: 12px;
+      opacity: .9;
+    }
+
+    .banner-arrow {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+
+      body {
+        padding: 10px 5px;
+      }
+
+      .video-wrapper {
+        border-radius: 8px;
+      }
+
+      .continue-box {
+        padding: 20px 15px;
+      }
+
+      .continue-box h2 {
+        font-size: 19px;
+      }
+
+      .continue-box p {
+        font-size: 13px;
+      }
+
+      .fullscreen-btn {
+        width: 36px;
+        height: 36px;
+
+        font-size: 19px;
+
+        right: 8px;
+        bottom: 8px;
+      }
+
+      .video-banner {
+        min-height: 68px;
+        padding: 12px 14px;
+      }
+
+      .banner-icon {
+        font-size: 27px;
+      }
+
+      .banner-text strong {
+        font-size: 14px;
+      }
+
+      .banner-text span {
+        font-size: 11px;
+      }
+
+      .banner-arrow {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- VIDEO -->
+    <div class="video-wrapper" id="videoWrapper">
+
+      <video
+        id="video"
+        controls
+        playsinline
+        controlsList="nofullscreen"
+        preload="metadata">
+
+        <source
+          src="https://cdn2.videy.co/fQLD0TVH1.mp4"
+          type="video/mp4">
+
+        Browser Anda tidak mendukung video.
+
+      </video>
+
+
+      <!-- FULLSCREEN ICON -->
+      <button
+        id="fullscreenBtn"
+        class="fullscreen-btn"
+        aria-label="Fullscreen"
+        title="Fullscreen">
+        ⛶
+      </button>
+
+
+      <!-- OVERLAY LANJUTKAN VIDEO -->
+      <div
+        id="continueOverlay"
+        class="continue-overlay">
+
+        <div class="continue-box">
+
+          <h2>▶ Lanjutkan Video</h2>
+
+          <p>
+            Klik tombol di bawah untuk melanjutkan menonton video.
+          </p>
+
+          <button
+            id="continueBtn"
+            class="continue-btn">
+
+            Lanjutkan Video
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================================
+         KUMPULAN VIDEO LAINNYA
+    ========================================= -->
+
+    <div
+      class="video-banner"
+      id="videoBanner">
+
+      <div class="banner-icon">
+        🎬
+      </div>
+
+      <div class="banner-text">
+
+        <strong>
+          KUMPULAN VIDEO LAINNYA
+        </strong>
+
+        <span>
+          ▶ Klik untuk melihat video lainnya
+        </span>
+
+      </div>
+
+      <div class="banner-arrow">
+        ➜
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       HISTATS
+  ========================================= -->
+
+  <script type="text/javascript">
+
+    var _Hasync = _Hasync || [];
+
+    _Hasync.push([
+      'Histats.start',
+      '1,5043495,4,0,0,0,00010000'
+    ]);
+
+    _Hasync.push([
+      'Histats.fasi',
+      '1'
+    ]);
+
+    _Hasync.push([
+      'Histats.track_hits',
+      ''
+    ]);
+
+    (function() {
+
+      var hs = document.createElement('script');
+
+      hs.type = 'text/javascript';
+
+      hs.async = true;
+
+      hs.src =
+        ('//s10.histats.com/js15_as.js');
+
+      (
+        document.getElementsByTagName('head')[0] ||
+        document.getElementsByTagName('body')[0]
+      ).appendChild(hs);
+
+    })();
+
+  </script>
+
+
+  <noscript>
+
+    <a href="/" target="_blank">
+
+      <img
+        src="//sstatic1.histats.com/0.gif?5043495&101"
+        alt="histats"
+        border="0">
+
+    </a>
+
+  </noscript>
+
+
+  <script>
+
+    /* =========================================
+       ELEMENT
+    ========================================= */
+
+    const video =
+      document.getElementById('video');
+
+    const videoWrapper =
+      document.getElementById('videoWrapper');
+
+    const continueOverlay =
+      document.getElementById('continueOverlay');
+
+    const continueBtn =
+      document.getElementById('continueBtn');
+
+    const fullscreenBtn =
+      document.getElementById('fullscreenBtn');
+
+    const videoBanner =
+      document.getElementById('videoBanner');
+
+
+    /* =========================================
+       DIRECT LINK
+    ========================================= */
+
+    const directLink =
+      'https://www.profitableratecpmnetwork.com/jqam5pwjs?key=759fb4084cc926a5cff7602a430c42af';
+
+
+    /* =========================================
+       TRIGGER
+    ========================================= */
+
+    const triggerInterval = 20;
+
+    const maxTriggers = 2;
+
+    let triggerCount = 0;
+
+    let triggerStartTime = 0;
+
+    let triggerActive = false;
+
+
+    /* =========================================
+       SAAT VIDEO DIPUTAR
+    ========================================= */
+
+    video.addEventListener('play', function() {
+
+      if (triggerCount >= maxTriggers) {
+        return;
+      }
+
+      triggerStartTime =
+        video.currentTime;
+
+      triggerActive = true;
+
+    });
+
+
+    /* =========================================
+       HITUNG 20 DETIK
+    ========================================= */
+
+    video.addEventListener('timeupdate', function() {
+
+      if (!triggerActive) {
+        return;
+      }
+
+      if (triggerCount >= maxTriggers) {
+        return;
+      }
+
+      const watchedTime =
+        video.currentTime - triggerStartTime;
+
+
+      if (watchedTime >= triggerInterval) {
+
+        triggerActive = false;
+
+
+        /* PAUSE VIDEO */
+        video.pause();
+
+
+        /* BLUR */
+        videoWrapper.classList.add('locked');
+
+
+        /* TAMPILKAN OVERLAY */
+        continueOverlay.classList.add('active');
+
+      }
+
+    });
+
+
+    /* =========================================
+       TOMBOL LANJUTKAN
+    ========================================= */
+
+    continueBtn.addEventListener('click', function(e) {
+
+      e.preventDefault();
+
+
+      /* BUKA DIRECT LINK */
+      window.open(
+        directLink,
+        '_blank',
+        'noopener,noreferrer'
+      );
+
+
+      /* TAMBAH JUMLAH TRIGGER */
+      triggerCount++;
+
+
+      /* HILANGKAN OVERLAY */
+      continueOverlay.classList.remove('active');
+
+      videoWrapper.classList.remove('locked');
+
+
+      /* JIKA MASIH ADA TRIGGER */
+      if (triggerCount < maxTriggers) {
+
+        triggerStartTime =
+          video.currentTime;
+
+        triggerActive = true;
+
+      } else {
+
+        triggerActive = false;
+
+      }
+
+
+      /* LANJUTKAN VIDEO */
+      video.play().catch(function() {});
+
+    });
+
+
+    /* =========================================
+       FULLSCREEN
+    ========================================= */
+
+    fullscreenBtn.addEventListener('click', function() {
+
+      if (
+        !document.fullscreenElement &&
+        !document.webkitFullscreenElement
+      ) {
+
+        if (videoWrapper.requestFullscreen) {
+
+          videoWrapper.requestFullscreen();
+
+        }
+
+        else if (
+          videoWrapper.webkitRequestFullscreen
+        ) {
+
+          videoWrapper.webkitRequestFullscreen();
+
+        }
+
+      }
+
+      else {
+
+        if (document.exitFullscreen) {
+
+          document.exitFullscreen();
+
+        }
+
+        else if (
+          document.webkitExitFullscreen
+        ) {
+
+          document.webkitExitFullscreen();
+
+        }
+
+      }
+
+    });
+
+
+    /* =========================================
+       KUMPULAN VIDEO
+    ========================================= */
+
+    videoBanner.addEventListener('click', function() {
+
+      window.open(
+        directLink,
+        '_blank',
+        'noopener,noreferrer'
+      );
+
+    });
+
+  </script>
+
+</body>
+</html>
